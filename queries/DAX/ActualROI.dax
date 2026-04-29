@@ -1,0 +1,54 @@
+/*
+ * Measure: Actual ROI
+ * Purpose: Calculate actual realized ROI from automation efforts
+ * 
+ * How it works:
+ * - For specialized projects: Uses effort-based ROI calculation
+ * - For standard projects: Uses cumulative cost formula
+ * - Returns BLANK for rows with no data
+ * 
+ * Special handling:
+ * - Row level: Calculates per project
+ * - Total level: Combines specialized and standard project totals
+ * - Empty rows: Returns blank instead of showing zeros
+ * 
+ * Why the complexity:
+ * Some projects have different ROI calculation methodology (effort-based).
+ * Standard projects use cost-based calculation.
+ * This measure handles both approaches seamlessly.
+ * 
+ * Prerequisites:
+ * You need to have these measures defined:
+ * - [Cumulative Manual Cost]
+ * - [Cumulative Automation Cost]
+ */
+
+Actual ROI = 
+VAR HasData = NOT ISBLANK(SUM(FactROI[TotalTC]))
+RETURN
+IF(
+    NOT HasData,
+    BLANK(),
+    IF(
+        HASONEVALUE(FactROI[ProjectName]),
+        // Row level calculation
+        IF(
+            VALUES(FactROI[ProjectName]) = "ProjectB",
+            SUM(FactROI[EffortBasedROI]),
+            [Cumulative Manual Cost] - [Cumulative Automation Cost]
+        ),
+        // Total level calculation
+        VAR SpecializedTotal = 
+            CALCULATE(
+                SUM(FactROI[EffortBasedROI]),
+                FactROI[ProjectName] = "ProjectB"
+            )
+        VAR StandardTotal = 
+            CALCULATE(
+                [Cumulative Manual Cost] - [Cumulative Automation Cost],
+                FactROI[ProjectName] <> "ProjectB"
+            )
+        RETURN
+            SpecializedTotal + StandardTotal
+    )
+)

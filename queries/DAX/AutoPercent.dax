@@ -1,0 +1,22 @@
+/*
+ * Measure: AutoPercent
+ * Purpose: Calculate overall automation percentage
+ * 
+ * Formula: Automated TCs / Total TCs (including third party)
+ * 
+ * Why this matters:
+ * Shows what percentage of all test cases are automated.
+ * Helps track automation adoption across projects.
+ * 
+ * Note: This includes third party tools in the denominator.
+ * For internal-only percentage (excluding third party), use InternalAutoPercent measure.
+ */
+
+AutoPercent = 
+VAR TotalTCs = SUM(FactROI[AutomatedTC]) + SUM(FactROI[ManualTC]) + SUM(FactROI[ThirdPartyTC])
+RETURN
+    IF(
+        TotalTCs = 0,
+        BLANK(),
+        DIVIDE(SUM(FactROI[AutomatedTC]), TotalTCs)
+    )

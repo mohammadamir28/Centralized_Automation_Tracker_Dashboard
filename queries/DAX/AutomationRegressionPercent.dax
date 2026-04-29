@@ -1,0 +1,20 @@
+/*
+ * Measure: AutomationRegressionPercent
+ * Purpose: Calculate automation percentage for regression test cases only
+ * 
+ * Formula: Automated Regression TCs / Total Regression TCs
+ * 
+ * Why this matters:
+ * Regression tests are ideal candidates for automation (run repeatedly).
+ * Shows how well we're automating our regression testing.
+ * Higher regression automation % = less manual effort per release.
+ * 
+ * Regression tests typically have higher automation % than functional tests.
+ */
+
+AutomationRegressionPercent = 
+DIVIDE(
+    SUM(FactROI[AutoRegTC]), 
+    SUM(FactROI[TRegTC]),
+    BLANK()
+)

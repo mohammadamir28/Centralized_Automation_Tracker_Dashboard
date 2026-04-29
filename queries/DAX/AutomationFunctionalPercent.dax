@@ -1,0 +1,20 @@
+/*
+ * Measure: AutomationFunctionalPercent
+ * Purpose: Calculate automation percentage for functional test cases only
+ * 
+ * Formula: Automated Functional TCs / Total Functional TCs
+ * 
+ * Why this matters:
+ * Tracks automation progress specifically for functional testing.
+ * Helps identify if functional or regression needs more automation focus.
+ * Different test types often have different automation strategies.
+ * 
+ * Compare with AutomationRegressionPercent to see where to invest effort.
+ */
+
+AutomationFunctionalPercent = 
+DIVIDE(
+    SUM(FactROI[AutoFuncTC]), 
+    SUM(FactROI[TFuncTC]),
+    BLANK()
+)

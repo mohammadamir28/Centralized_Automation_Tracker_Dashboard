@@ -1,0 +1,28 @@
+/*
+ * Measure: Projected ROI
+ * Purpose: Calculate expected ROI based on month of the year
+ * 
+ * Formula: Month Number × 30,000
+ * 
+ * How it works:
+ * - January (Month 1) = 30,000
+ * - February (Month 2) = 60,000
+ * - March (Month 3) = 90,000
+ * - December (Month 12) = 360,000
+ * 
+ * Why this matters:
+ * Provides a linear projection to compare against actual ROI.
+ * Helps identify if we're meeting expected automation value targets.
+ * Simple baseline for quarterly/annual planning.
+ * 
+ * Note: You can adjust the 30,000 multiplier based on your targets.
+ */
+
+Projected ROI = 
+VAR CurrentMonth = MIN(FactROI[MonthNumber])
+RETURN
+    IF(
+        ISBLANK(CurrentMonth),
+        BLANK(),
+        CurrentMonth * 30000
+    )

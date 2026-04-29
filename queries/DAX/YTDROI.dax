@@ -1,0 +1,33 @@
+/*
+ * Measure: YTD ROI
+ * Purpose: Calculate Year-to-Date cumulative ROI
+ * 
+ * How it works:
+ * - Accumulates Actual ROI from January through current month
+ * - Resets every January (year boundary)
+ * - Works at any aggregation level
+ * 
+ * Example:
+ * - January: $5,000 → YTD: $5,000
+ * - February: $3,000 → YTD: $8,000 (Jan + Feb)
+ * - March: $4,000 → YTD: $12,000 (Jan + Feb + Mar)
+ * - Next January: $6,000 → YTD: $6,000 (resets)
+ * 
+ * Why this matters:
+ * Shows cumulative value generated so far in the year.
+ * Useful for comparing against annual targets.
+ * Helps track if we're on pace to meet yearly goals.
+ */
+
+YTD ROI = 
+VAR MaxDate = MAX(FactROI[ReleaseDate])
+VAR YearOfMaxDate = YEAR(MaxDate)
+RETURN
+    CALCULATE(
+        [Actual ROI],
+        FILTER(
+            ALL(FactROI),
+            YEAR(FactROI[ReleaseDate]) = YearOfMaxDate &&
+            FactROI[ReleaseDate] <= MaxDate
+        )
+    )

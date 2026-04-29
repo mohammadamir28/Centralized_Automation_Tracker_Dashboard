@@ -1,0 +1,22 @@
+/*
+ * Measure: InternalAutoPercent
+ * Purpose: Calculate automation percentage excluding third party tools
+ * 
+ * Formula: Automated TCs / (Automated TCs + Manual TCs)
+ * 
+ * Why this matters:
+ * Focuses on internal automation efforts only.
+ * Excludes third party tools that we don't control.
+ * Better metric for internal automation team performance.
+ * 
+ * Use this when you want to see pure automation vs manual testing ratio.
+ */
+
+InternalAutoPercent = 
+VAR InternalTotal = SUM(FactROI[AutomatedTC]) + SUM(FactROI[ManualTC])
+RETURN
+    IF(
+        InternalTotal = 0,
+        BLANK(),
+        DIVIDE(SUM(FactROI[AutomatedTC]), InternalTotal)
+    )
